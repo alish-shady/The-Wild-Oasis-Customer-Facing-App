@@ -1,6 +1,8 @@
 import SelectCountry from "@/app/_components/account/SelectCountry";
 import Image from "next/image";
-
+export const metadata = {
+  title: "Profile",
+};
 export default function Page() {
   // CHANGE
   const countryFlag = "/pt.jpg";

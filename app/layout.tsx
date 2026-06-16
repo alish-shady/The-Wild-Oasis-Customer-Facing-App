@@ -20,8 +20,8 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         className={`bg-primary-950 text-primary-100 antialiased min-h-screen flex flex-col relative ${albert.className}`}
       >
         <Header />
-        <div className="flex-1 px-8 py-12">
-          <main className="max-w-7xl mx-auto">{children}</main>
+        <div className="flex-1 w-full px-8 py-12">
+          <main className="w-full mx-auto grow">{children}</main>
         </div>
       </body>
     </html>

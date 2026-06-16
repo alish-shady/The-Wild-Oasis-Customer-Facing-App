@@ -10,5 +10,5 @@ export interface Booking {
   created_at: string;
   cabins: { name: string; image: string };
 }
-export type bookingId = Booking["id"];
-export type startDate = Booking["startDate"];
+export type BookingId = Booking["id"];
+export type StartDate = Booking["startDate"];

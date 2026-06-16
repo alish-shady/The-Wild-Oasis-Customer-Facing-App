@@ -1,6 +1,9 @@
 import ReservationCard from "@/app/_components/account/ReservationCard";
 import Link from "next/link";
 import type { Booking } from "@/app/_components/account/booking";
+export const metadata = {
+  title: "Reservations",
+};
 export default function Page() {
   const bookings: Booking[] = [];
 

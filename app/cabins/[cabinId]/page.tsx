@@ -1,7 +1,11 @@
 import { getCabin } from "@/app/_lib/data-service";
 import { EyeSlashIcon, MapPinIcon, UsersIcon } from "@heroicons/react/24/solid";
 import Image from "next/image";
-
+export async function generateMetadata(props: PageProps<"/cabins/[cabinId]">) {
+  const { cabinId } = await props.params;
+  const { name } = await getCabin(cabinId);
+  return { title: `${name} cabin` };
+}
 export default async function Page(props: PageProps<"/cabins/[cabinId]">) {
   const { cabinId } = await props.params;
   const cabin = await getCabin(cabinId);
@@ -18,7 +22,7 @@ export default async function Page(props: PageProps<"/cabins/[cabinId]">) {
             Cabin {name}
           </h3>
 
-          <p className="text-lg text-primary-300 mb-10">{description}</p>
+          <p className="text-lg text-primary-300 mb-10">{description.fd.fd}</p>
 
           <ul className="flex flex-col gap-4 mb-7">
             <li className="flex gap-3 items-center">

@@ -8,7 +8,7 @@ function CabinCard({ cabin }: { cabin: Cabin }) {
 
   return (
     <div className="flex border-primary-800 border">
-      <div className="relative grow">
+      <div className="relative flex-1">
         <Image
           src={image}
           fill
@@ -18,7 +18,7 @@ function CabinCard({ cabin }: { cabin: Cabin }) {
         />
       </div>
 
-      <div className="grow">
+      <div className="flex-1">
         <div className="pt-5 pb-4 px-7 bg-primary-950">
           <h3 className="text-accent-500 font-semibold text-2xl mb-3">Cabin {name}</h3>
 

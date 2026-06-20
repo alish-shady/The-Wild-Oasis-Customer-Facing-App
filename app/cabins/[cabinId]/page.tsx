@@ -3,7 +3,7 @@ import { EyeSlashIcon, MapPinIcon, UsersIcon } from "@heroicons/react/24/solid";
 import Image from "next/image";
 export async function generateMetadata(props: PageProps<"/cabins/[cabinId]">) {
   const { cabinId } = await props.params;
-  const { name } = await getCabin(cabinId);
+  const { name } = await getCabin(Number(cabinId));
   return { title: `${name} cabin` };
 }
 export async function generateStaticParams() {
@@ -15,8 +15,8 @@ export async function generateStaticParams() {
 }
 export const dynamicParams = false;
 export default async function Page(props: PageProps<"/cabins/[cabinId]">) {
-  const { cabinId } = await props.params;
-  const cabin = await getCabin(cabinId);
+  const cabinId = Number((await props.params).cabinId);
+  const cabin = await getCabin(Number(cabinId));
   const { name, maxCapacity, image, description } = cabin;
   return (
     <div className="max-w-6xl mx-auto mt-8">

@@ -2,10 +2,11 @@ import { eachDayOfInterval } from "date-fns";
 import { supabase } from "./supabase";
 import { notFound } from "next/navigation";
 import { Cabin } from "../_components/cabins/cabin";
+import { Booking } from "../_components/account/booking";
 /////////////
 // GET
 
-export async function getCabin(id: string) {
+export async function getCabin(id: number): Promise<Cabin> {
   const { data, error } = await supabase.from("cabins").select("*").eq("id", id).single();
 
   // For testing
@@ -51,7 +52,7 @@ export async function getGuest(email: string) {
   return data;
 }
 
-export async function getBooking(id: number) {
+export async function getBooking(id: number): Promise<Booking> {
   const { data, error, count } = await supabase.from("bookings").select("*").eq("id", id).single();
 
   if (error) {
@@ -62,12 +63,12 @@ export async function getBooking(id: number) {
   return data;
 }
 
-export async function getBookings(guestId: number) {
+export async function getBookings(guestId: number): Promise<Booking[]> {
   const { data, error, count } = await supabase
     .from("bookings")
     // We actually also need data on the cabins as well. But let's ONLY take the data that we actually need, in order to reduce downloaded data.
     .select(
-      "id, created_at, startDate, endDate, numNights, numGuests, totalPrice, guestId, cabinId, cabins(name, image)",
+      "id, created_at, startDate, endDate, status, numNights, numGuests, totalPrice, guestId, cabinId, cabins(name, image)",
     )
     .eq("guestId", guestId)
     .order("startDate");
@@ -133,7 +134,7 @@ export async function getCountries() {
 /////////////
 // CREATE
 
-export async function createGuest(newGuest) {
+export async function createGuest(newGuest: object) {
   const { data, error } = await supabase.from("guests").insert([newGuest]);
 
   if (error) {
@@ -144,7 +145,7 @@ export async function createGuest(newGuest) {
   return data;
 }
 
-export async function createBooking(newBooking) {
+export async function createBooking(newBooking: Booking) {
   const { data, error } = await supabase
     .from("bookings")
     .insert([newBooking])
@@ -164,7 +165,7 @@ export async function createBooking(newBooking) {
 // UPDATE
 
 // The updatedFields is an object which should ONLY contain the updated data
-export async function updateGuest(id: number, updatedFields) {
+export async function updateGuest(id: number, updatedFields: object) {
   const { data, error } = await supabase.from("guests").update(updatedFields).eq("id", id).select().single();
 
   if (error) {
@@ -174,7 +175,7 @@ export async function updateGuest(id: number, updatedFields) {
   return data;
 }
 
-export async function updateBooking(id: number, updatedFields) {
+export async function updateBooking(id: number, updatedFields: Partial<Booking>) {
   const { data, error } = await supabase.from("bookings").update(updatedFields).eq("id", id).select().single();
 
   if (error) {
@@ -187,7 +188,7 @@ export async function updateBooking(id: number, updatedFields) {
 /////////////
 // DELETE
 
-export async function deleteBooking(id) {
+export async function deleteBooking(id: number) {
   const { data, error } = await supabase.from("bookings").delete().eq("id", id);
 
   if (error) {

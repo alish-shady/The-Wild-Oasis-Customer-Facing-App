@@ -4,5 +4,6 @@ export interface Cabin {
   readonly maxCapacity: number;
   readonly regularPrice: number;
   readonly discount: number;
+  readonly description?: string;
   readonly image: string;
 }

@@ -19,7 +19,7 @@ function ReservationCard({ booking }: { booking: Booking }) {
     numGuests,
     status,
     created_at,
-    cabins: { name, image },
+    cabins: [{ name, image }],
   } = booking;
 
   return (

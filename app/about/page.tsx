@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { getCabins } from "../_lib/data-service";
+import Counter from "../_components/cabins/Counter";
 
 export const metadata = {
   title: "About",
@@ -13,7 +14,7 @@ export default async function Page() {
     <div className="grid grid-cols-5 gap-x-24 gap-y-32 text-lg items-center">
       <div className="col-span-3">
         <h1 className="text-4xl mb-10 text-accent-400 font-medium">Welcome to The Wild Oasis</h1>
-
+        <Counter />
         <div className="space-y-8">
           <p>
             Where nature&apos;s beauty and comfortable living blend seamlessly. Hidden away in the heart of the Italian

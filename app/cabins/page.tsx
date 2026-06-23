@@ -1,12 +1,14 @@
 import { Suspense } from "react";
 import CabinList from "@/app/_components/cabins/CabinList";
 import Spinner from "@/app/_components/common/Spinner";
-
+import CabinFilterPanel from "../_components/cabins/CabinFilterPanel";
 export const metadata = {
   title: "Cabins",
 };
 export const revalidate = 3600;
-export default function Page() {
+export default async function Page(props: PageProps<"/cabins">) {
+  const searchParamsResolved = await props.searchParams;
+  const filter = typeof searchParamsResolved.capacity === "string" ? searchParamsResolved.capacity : "all";
   return (
     <div>
       <h1 className="text-4xl mb-5 text-accent-400 font-medium">Our Luxury Cabins</h1>
@@ -16,8 +18,11 @@ export default function Page() {
         under the stars. Enjoy nature&apos;s beauty in your own little home away from home. The perfect spot for a
         peaceful, calm vacation. Welcome to paradise.
       </p>
-      <Suspense fallback={<Spinner />}>
-        <CabinList />
+      <div className="flex justify-end mb-8">
+        <CabinFilterPanel />
+      </div>
+      <Suspense fallback={<Spinner />} key={filter}>
+        <CabinList filter={filter} />
       </Suspense>
     </div>
   );

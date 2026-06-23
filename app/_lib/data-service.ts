@@ -3,6 +3,7 @@ import { supabase } from "./supabase";
 import { notFound } from "next/navigation";
 import { Cabin } from "../_components/cabins/cabin";
 import { Booking } from "../_components/account/booking";
+import { Country, CountryApiItem } from "../_components/account/country";
 /////////////
 // GET
 
@@ -30,11 +31,12 @@ export async function getCabinPrice(id: number) {
   return data;
 }
 
-export const getCabins = async function (): Promise<Cabin[]> {
-  const { data, error } = await supabase
-    .from("cabins")
-    .select("id, name, maxCapacity, regularPrice, discount, image")
-    .order("name");
+export const getCabins = async function (capacity: string): Promise<Cabin[]> {
+  const query = supabase.from("cabins").select("id, name, maxCapacity, regularPrice, discount, image").order("name");
+  if (capacity === "small") query.lte("maxCapacity", 3);
+  if (capacity === "medium") query.gte("maxCapacity", 4).lte("maxCapacity", 7);
+  if (capacity === "large") query.gte("maxCapacity", 8);
+  const { data, error } = await query;
 
   if (error) {
     console.error(error);
@@ -121,10 +123,20 @@ export async function getSettings() {
   return data;
 }
 
-export async function getCountries() {
+export async function getCountries(): Promise<Country[]> {
   try {
-    const res = await fetch("https://restcountries.com/v2/all?fields=name,flag");
-    const countries = await res.json();
+    const res = await fetch(
+      "https://api.restcountries.com/countries/v5?response_fields=names.common,flag.emoji&limit=100",
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.RESTCOUNTRIES_KEY}`,
+        },
+      },
+    );
+    const { data } = await res.json();
+    const countries = data.objects.map((country: CountryApiItem) => {
+      return { name: country.names.common, flag: country.flag.emoji };
+    });
     return countries;
   } catch {
     throw new Error("Could not fetch countries");

@@ -56,13 +56,35 @@
 }
 
 /* For data picker */
-.rdp {
-  --rdp-cell-size: 32px !important;
+.rdp-root {
+  --rdp-cell-size: 32px !important; /* Reduce day cell size */
+  --rdp-day-width: 32px !important; /* Reduce day width */
+  --rdp-day-height: 32px !important; /* Reduce day height */
+  --rdp-day_button-width: 30px !important; /* Reduce button width */
+  --rdp-day_button-height: 30px !important; /* Reduce button height */
+  --rdp-months-gap: 1rem !important;
   --rdp-accent-color: theme("colors.accent.500") !important;
-  --rdp-background-color: theme("colors.accent.600") !important;
+  --rdp-accent-background-color: theme("colors.accent.600") !important;
+  background-color: theme("colors.primary.900") !important;
   margin: 0 !important;
 }
+.rdp-months {
+  display: flex;
+  justify-content: center;
+  gap: var(--rdp-months-gap, 1rem);
+}
+.rdp-month_caption {
+  display: flex;
+  justify-content: left;
+  align-items: center;
+}
 
+.rdp-dropdowns {
+  display: flex;
+  justify-content: left;
+  gap: 0.5rem;
+  width: 100%;
+}
 button {
   cursor: pointer;
 }

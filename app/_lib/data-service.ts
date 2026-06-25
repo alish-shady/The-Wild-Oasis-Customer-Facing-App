@@ -4,14 +4,12 @@ import { notFound } from "next/navigation";
 import { Cabin } from "../_components/cabins/cabin";
 import { Booking } from "../_components/account/booking";
 import { Country, CountryApiItem } from "../_components/account/country";
+import { Settings } from "../_components/account/settings";
 /////////////
 // GET
 
 export async function getCabin(id: number): Promise<Cabin> {
   const { data, error } = await supabase.from("cabins").select("*").eq("id", id).single();
-
-  // For testing
-  // await new Promise((res) => setTimeout(res, 1000));
 
   if (error) {
     console.error(error);
@@ -112,9 +110,8 @@ export async function getBookedDatesByCabinId(cabinId: number) {
   return bookedDates;
 }
 
-export async function getSettings() {
+export async function getSettings(): Promise<Settings> {
   const { data, error } = await supabase.from("settings").select("*").single();
-
   if (error) {
     console.error(error);
     throw new Error("Settings could not be loaded");

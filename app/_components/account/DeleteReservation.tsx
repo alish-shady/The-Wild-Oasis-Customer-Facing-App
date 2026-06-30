@@ -1,5 +1,5 @@
 import { TrashIcon } from "@heroicons/react/24/solid";
-import type { BookingId } from "./booking";
+import type { BookingId } from "../../../types/booking";
 function DeleteReservation({ bookingId }: { bookingId: BookingId }) {
   return (
     <button className="group flex items-center gap-2 uppercase text-xs font-bold text-primary-300 grow px-3 hover:bg-accent-600 transition-colors hover:text-primary-900">

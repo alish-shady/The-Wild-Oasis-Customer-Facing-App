@@ -1,7 +1,7 @@
 import { EyeSlashIcon, MapPinIcon, UsersIcon } from "@heroicons/react/24/solid";
 import TextExpander from "@/app/_components/common/TextExpander";
 import Image from "next/image";
-import { Cabin } from "@/app/_components/cabins/cabin";
+import { Cabin } from "@/types/cabin";
 export default function CabinComponent({ cabin }: { cabin: Cabin }) {
   const { name, maxCapacity, image, description } = cabin;
   return (

@@ -4,8 +4,8 @@ import { getBookedDatesByCabinId } from "@/app/_lib/data-service";
 import { useAppDispatch, useAppSelector } from "@/app/_lib/hooks";
 import "@daypicker/react/style.css";
 import { DateRange, DayPicker, isDateRange } from "react-day-picker";
-import { Settings } from "../account/settings";
-import { Cabin } from "./cabin";
+import { Settings } from "../../../types/settings";
+import { Cabin } from "../../../types/cabin";
 import { addRange, clearRange, selectReservationDateRange } from "@/app/_lib/slices/reservationSlice";
 
 type BookedDates = Awaited<ReturnType<typeof getBookedDatesByCabinId>>;

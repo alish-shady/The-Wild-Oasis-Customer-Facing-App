@@ -2,30 +2,23 @@ import { getCountries } from "@/app/_lib/data-service";
 
 async function SelectCountry({
   defaultCountry,
+  defaultFlag,
   name,
   id,
   className,
 }: {
   defaultCountry: string;
+  defaultFlag: string;
   name: string;
   id: string;
   className: string;
 }) {
-  // const countries: { name?: string; flag?: string }[] = [];
   const countries = await getCountries();
-  const flag = countries.length > 0 ? (countries.find((country) => country?.name === defaultCountry)?.flag ?? "") : "";
-
   return (
-    <select
-      name={name}
-      id={id}
-      // Here we use a trick to encode BOTH the country name and the flag into the value. Then we split them up again later in the server action
-      defaultValue={`${defaultCountry}%${flag}`}
-      className={className}
-    >
+    <select name={name} id={id} defaultValue={`${defaultCountry}%${defaultFlag}`} className={className}>
       <option value="">Select country...</option>
       {countries.map((c) => (
-        <option key={c.name} value={`${c.name}%${c.flag}`}>
+        <option key={c.name} value={`${c.name}%https://flagcdn.com/${c.flag.toLowerCase()}.svg`}>
           {c.name}
         </option>
       ))}

@@ -45,11 +45,9 @@ export const getCabins = async function (capacity: string): Promise<Cabin[]> {
   return data;
 };
 
-// Guests are uniquely identified by their email address
 export async function getGuest(email: string): Promise<Guest> {
   const { data, error } = await supabase.from("guests").select("*").eq("email", email).single();
 
-  // No error here! We handle the possibility of no guest in the sign in callback
   return data;
 }
 
@@ -124,7 +122,7 @@ export async function getSettings(): Promise<Settings> {
 export async function getCountries(): Promise<Country[]> {
   try {
     const res = await fetch(
-      "https://api.restcountries.com/countries/v5?response_fields=names.common,flag.emoji&limit=100",
+      "https://api.restcountries.com/countries/v5?response_fields=names.common,codes.alpha_2&limit=100",
       {
         headers: {
           Authorization: `Bearer ${process.env.RESTCOUNTRIES_KEY}`,
@@ -133,7 +131,7 @@ export async function getCountries(): Promise<Country[]> {
     );
     const { data } = await res.json();
     const countries = data.objects.map((country: CountryApiItem) => {
-      return { name: country.names.common, flag: country.flag.emoji };
+      return { name: country.names.common, flag: country.codes.alpha_2 };
     });
     return countries;
   } catch {
@@ -174,15 +172,12 @@ export async function createBooking(newBooking: Booking) {
 /////////////
 // UPDATE
 
-// The updatedFields is an object which should ONLY contain the updated data
-export async function updateGuest(id: number, updatedFields: object) {
-  const { data, error } = await supabase.from("guests").update(updatedFields).eq("id", id).select().single();
-
+export async function updateGuest(id: string, updatedFields: Partial<Guest>) {
+  const { data, error } = await supabase.from("guests").update(updatedFields).eq("id", id);
   if (error) {
     console.error(error);
     throw new Error("Guest could not be updated");
   }
-  return data;
 }
 
 export async function updateBooking(id: number, updatedFields: Partial<Booking>) {

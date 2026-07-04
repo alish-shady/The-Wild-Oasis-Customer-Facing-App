@@ -2,8 +2,8 @@ export type CountryApiItem = {
   names: {
     common: string;
   };
-  flag: {
-    emoji: string;
+  codes: {
+    alpha_2: string;
   };
 };
 export type Country = {

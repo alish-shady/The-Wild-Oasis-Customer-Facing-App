@@ -4,7 +4,7 @@ import { createGuest, getGuest } from "./data-service";
 
 declare module "@auth/core/types" {
   interface DefaultUser {
-    guestId?: string;
+    guestId: string;
   }
 }
 
@@ -21,11 +21,9 @@ const authConfig = {
       try {
         if (!user.email || !user.name) return false;
         const existingGuest = await getGuest(user.email);
-        console.log({ existingGuest });
         if (!existingGuest) await createGuest({ fullName: user.name, email: user.email });
         return true;
-      } catch (err) {
-        console.log({ err });
+      } catch {
         return false;
       }
     },

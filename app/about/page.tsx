@@ -9,7 +9,6 @@ export const metadata = {
 export const revalidate = 86400;
 export default async function Page() {
   const cabins = await getCabins("all");
-  console.log(`Our ${cabins.length} luxury`);
   return (
     <div className="grid grid-cols-5 gap-x-24 gap-y-32 text-lg items-center">
       <div className="col-span-3">

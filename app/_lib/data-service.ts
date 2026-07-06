@@ -1,15 +1,15 @@
 import { eachDayOfInterval } from "date-fns";
 import { supabase } from "./supabase";
 import { notFound } from "next/navigation";
-import { Cabin } from "../../types/cabin";
-import { Booking } from "../../types/booking";
+import { Cabin, CabinId } from "../../types/cabin";
+import { Booking, BookingId } from "../../types/booking";
 import { Country, CountryApiItem } from "../../types/country";
 import { Settings } from "../../types/settings";
 import { Guest, NewGuest } from "@/types/guest";
 /////////////
 // GET
 
-export async function getCabin(id: number): Promise<Cabin> {
+export async function getCabin(id: CabinId): Promise<Cabin> {
   const { data, error } = await supabase.from("cabins").select("*").eq("id", id).single();
 
   if (error) {
@@ -20,7 +20,7 @@ export async function getCabin(id: number): Promise<Cabin> {
   return data;
 }
 
-export async function getCabinPrice(id: number) {
+export async function getCabinPrice(id: CabinId) {
   const { data, error } = await supabase.from("cabins").select("regularPrice, discount").eq("id", id).single();
 
   if (error) {
@@ -51,7 +51,7 @@ export async function getGuest(email: string): Promise<Guest> {
   return data;
 }
 
-export async function getBooking(id: number): Promise<Booking> {
+export async function getBooking(id: BookingId): Promise<Booking> {
   const { data, error, count } = await supabase.from("bookings").select("*").eq("id", id).single();
 
   if (error) {
@@ -65,7 +65,6 @@ export async function getBooking(id: number): Promise<Booking> {
 export async function getBookings(guestId: number): Promise<Booking[]> {
   const { data, error, count } = await supabase
     .from("bookings")
-    // We actually also need data on the cabins as well. But let's ONLY take the data that we actually need, in order to reduce downloaded data.
     .select(
       "id, created_at, startDate, endDate, status, numNights, numGuests, totalPrice, guestId, cabinId, cabins(name, image)",
     )
@@ -180,8 +179,14 @@ export async function updateGuest(id: string, updatedFields: Partial<Guest>) {
   }
 }
 
-export async function updateBooking(id: number, updatedFields: Partial<Booking>) {
-  const { data, error } = await supabase.from("bookings").update(updatedFields).eq("id", id).select().single();
+export async function updateBooking(id: BookingId, guestId: number, updatedFields: Partial<Booking>) {
+  const { data, error } = await supabase
+    .from("bookings")
+    .update(updatedFields)
+    .eq("id", id)
+    .eq("guestId", guestId)
+    .select()
+    .single();
 
   if (error) {
     console.error(error);
@@ -193,8 +198,8 @@ export async function updateBooking(id: number, updatedFields: Partial<Booking>)
 /////////////
 // DELETE
 
-export async function deleteBooking(id: number) {
-  const { data, error } = await supabase.from("bookings").delete().eq("id", id);
+export async function deleteBooking(id: BookingId, guestId: number) {
+  const { data, error } = await supabase.from("bookings").delete().eq("id", id).eq("guestId", guestId);
 
   if (error) {
     console.error(error);

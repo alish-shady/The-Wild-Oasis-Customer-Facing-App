@@ -1,16 +1,18 @@
 import ReservationCard from "@/app/_components/account/ReservationCard";
 import Link from "next/link";
-import type { Booking } from "@/types/booking";
+import { getBookings } from "@/app/_lib/data-service";
+import { auth } from "@/app/_lib/auth";
 export const metadata = {
   title: "Reservations",
 };
-export default function Page() {
-  const bookings: Booking[] = [];
-
+export default async function Page() {
+  const session = await auth();
+  if (!session?.user) throw new Error("Unauthorized");
+  const bookings = await getBookings(Number(session.user?.guestId));
+  console.log(bookings);
   return (
     <div>
       <h2 className="font-semibold text-2xl text-accent-400 mb-7">Your reservations</h2>
-
       {bookings.length === 0 ? (
         <p className="text-lg">
           You have no reservations yet. Check out our{" "}

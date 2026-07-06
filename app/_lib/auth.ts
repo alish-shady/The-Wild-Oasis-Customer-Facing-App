@@ -44,3 +44,9 @@ export const {
   signIn,
   signOut,
 } = NextAuth(authConfig);
+
+export const getGuestId = async () => {
+  const session = await auth();
+  if (!session || !session.user) throw new Error("You must be logged in for this action.");
+  return session.user.guestId;
+};

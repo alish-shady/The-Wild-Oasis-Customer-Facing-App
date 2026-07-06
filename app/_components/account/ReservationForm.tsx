@@ -13,7 +13,6 @@ function ReservationForm({ cabin, user }: { cabin: Cabin; user: User }) {
     <div className="scale-[1.01]">
       <div className="bg-primary-800 text-primary-300 px-16 py-2 flex justify-between items-center">
         <p>Logged in as</p>
-
         <div className="flex gap-4 items-center">
           <Image
             referrerPolicy="no-referrer"

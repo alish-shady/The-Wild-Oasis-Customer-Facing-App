@@ -1,9 +1,7 @@
-"use client";
-
 import { updateProfile } from "@/app/_lib/actions";
 import { Guest } from "@/types/guest";
 import Image from "next/image";
-import { useFormStatus } from "react-dom";
+import FormButton from "@/app/_components/common/FormButton";
 export default function UpdateProfileForm({ guest, children }: { guest: Guest; children: Readonly<React.ReactNode> }) {
   const { fullName, email, nationalId, countryFlag } = guest;
   return (
@@ -47,19 +45,8 @@ export default function UpdateProfileForm({ guest, children }: { guest: Guest; c
       </div>
 
       <div className="flex justify-end items-center gap-6">
-        <FormButton />
+        <FormButton>Update Profile</FormButton>
       </div>
     </form>
-  );
-}
-function FormButton() {
-  const { pending } = useFormStatus();
-  return (
-    <button
-      className="bg-accent-500 px-8 py-4 text-primary-800 font-semibold hover:bg-accent-600 transition-all disabled:cursor-not-allowed disabled:bg-gray-500 disabled:text-gray-300"
-      disabled={pending}
-    >
-      {pending ? "Updating..." : "Update profile"}
-    </button>
   );
 }

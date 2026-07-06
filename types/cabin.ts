@@ -7,3 +7,4 @@ export interface Cabin {
   readonly description?: string;
   readonly image: string;
 }
+export type CabinId = Cabin["id"];

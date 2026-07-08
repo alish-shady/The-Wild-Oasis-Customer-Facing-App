@@ -8,7 +8,7 @@ export const formatDistanceFromNow = (dateStr: StartDate) =>
   formatDistance(parseISO(dateStr), new Date(), {
     addSuffix: true,
   }).replace("about ", "");
-function ReservationCard({ booking }: { booking: Booking }) {
+function ReservationCard({ booking, onDelete }: { booking: Booking; onDelete: (bookingId: number) => Promise<void> }) {
   const { id, startDate, endDate, numNights, totalPrice, numGuests, created_at, cabins } = booking;
   const { name, image } = Array.isArray(cabins) ? cabins[0] : cabins;
   return (
@@ -61,7 +61,7 @@ function ReservationCard({ booking }: { booking: Booking }) {
               <PencilSquareIcon className="h-5 w-5 text-primary-600 group-hover:text-primary-800 transition-colors" />
               <span className="mt-1">Edit</span>
             </Link>
-            <DeleteReservation bookingId={id} />
+            <DeleteReservation bookingId={id} onDelete={onDelete} />
           </>
         ) : null}
       </div>

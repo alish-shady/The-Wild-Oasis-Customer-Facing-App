@@ -2,13 +2,24 @@
 
 import { TrashIcon } from "@heroicons/react/24/solid";
 import type { BookingId } from "../../../types/booking";
-import { deleteReservation } from "@/app/_lib/actions";
 import { useTransition } from "react";
 import SpinnerMini from "../common/SpinnerMini";
-function DeleteReservation({ bookingId }: { bookingId: BookingId }) {
+function DeleteReservation({
+  bookingId,
+  onDelete,
+}: {
+  bookingId: BookingId;
+  onDelete: (bookingId: number) => Promise<void>;
+}) {
   const [isPending, startTranstion] = useTransition();
   function handleDelete() {
-    startTranstion(() => deleteReservation(bookingId));
+    startTranstion(() => {
+      try {
+        onDelete(bookingId);
+      } catch (err) {
+        console.log(err);
+      }
+    });
   }
 
   return (

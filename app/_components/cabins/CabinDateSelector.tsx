@@ -7,6 +7,7 @@ import { DateRange, DayPicker, isDateRange } from "react-day-picker";
 import { Settings } from "../../../types/settings";
 import { Cabin } from "../../../types/cabin";
 import { addRange, clearRange, selectReservationDateRange } from "@/app/_lib/slices/reservationSlice";
+import { differenceInDays, isPast, isSameDay, isWithinInterval } from "date-fns";
 
 type BookedDates = Awaited<ReturnType<typeof getBookedDatesByCabinId>>;
 
@@ -16,23 +17,31 @@ type CabinDateSelectorProps = {
   cabin: Cabin;
 };
 
-// function isAlreadyBooked(range, datesArr) {
-//   return (
-//     range.from && range.to && datesArr.some((date) => isWithinInterval(date, { start: range.from, end: range.to }))
-//   );
-// }
-
 export default function CabinDateSelector({ bookedDates, settings, cabin }: CabinDateSelectorProps) {
-  const regularPrice = 23;
-  const discount = 23;
-  const numNights = 23;
-  const cabinPrice = 23;
+  const { regularPrice, discount, id } = cabin;
   const { minBookingLength, maxBookingLength } = settings;
   const today = new Date();
   const dispatch = useAppDispatch();
   const range = useAppSelector(selectReservationDateRange);
+  const displayRange = range?.cabinId === id ? range : { from: undefined, to: undefined };
+  const numNights = range?.to && range.from ? differenceInDays(range.to, range.from) : 0;
+  const cabinPrice = numNights * (regularPrice - discount);
   function handleSelect(data: DateRange | undefined) {
-    if (isDateRange(data)) dispatch(addRange(data));
+    if (!isDateRange(data)) return;
+    const { from, to } = data;
+    if (!from || !to) {
+      dispatch(addRange(data, id));
+      return;
+    }
+    const isAlreadyBooked = bookedDates.some((bookedDate) =>
+      isWithinInterval(bookedDate, {
+        start: from,
+        end: to,
+      }),
+    );
+    if (!isAlreadyBooked) {
+      dispatch(addRange(data, id));
+    }
   }
   return (
     <div className="flex flex-col justify-between items-center">
@@ -40,12 +49,12 @@ export default function CabinDateSelector({ bookedDates, settings, cabin }: Cabi
         className="p-4"
         mode="range"
         onSelect={handleSelect}
-        selected={range}
+        selected={displayRange}
         min={minBookingLength}
         max={maxBookingLength}
         startMonth={today}
         endMonth={new Date(today.getFullYear() + 5, 11)}
-        disabled={{ before: today }}
+        disabled={(curDate) => isPast(curDate) || bookedDates.some((date) => isSameDay(date, curDate))}
         captionLayout="dropdown"
         navLayout="after"
         numberOfMonths={2}
@@ -61,7 +70,7 @@ export default function CabinDateSelector({ bookedDates, settings, cabin }: Cabi
             ) : (
               <span className="text-2xl">${regularPrice}</span>
             )}
-            <span className="">/night</span>
+            <span>/night</span>
           </p>
           {numNights ? (
             <>
@@ -78,7 +87,7 @@ export default function CabinDateSelector({ bookedDates, settings, cabin }: Cabi
 
         {range?.from || range?.to ? (
           <button
-            className="border border-primary-800 py-2 px-4 text-sm font-semibold"
+            className="border border-primary-800 py-2 px-4 text-sm font-semibold ml-4"
             onClick={() => dispatch(clearRange())}
           >
             Clear

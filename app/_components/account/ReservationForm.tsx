@@ -5,10 +5,31 @@ import { Cabin } from "../../../types/cabin";
 import { selectReservationDateRange } from "@/app/_lib/slices/reservationSlice";
 import { User } from "next-auth";
 import Image from "next/image";
+import { differenceInDays } from "date-fns";
+import { createReservation } from "@/app/_lib/actions";
+import { useActionState } from "react";
 
+const initialState = {
+  error: "",
+  success: false,
+};
 function ReservationForm({ cabin, user }: { cabin: Cabin; user: User }) {
-  const { maxCapacity } = cabin;
+  const { maxCapacity, regularPrice, discount, id } = cabin;
   const range = useAppSelector(selectReservationDateRange);
+  const startDate = range?.from?.toISOString();
+  const endDate = range?.to?.toISOString();
+  const numNights = startDate && endDate ? differenceInDays(endDate, startDate) : 0;
+  const totalPrice = numNights * (regularPrice - discount);
+  const bookingData = {
+    startDate,
+    endDate,
+    numNights,
+    totalPrice,
+    cabinId: id,
+  };
+
+  const createBookingWithData = createReservation.bind(null, bookingData);
+  const [{ error, success }, formAction, isPending] = useActionState(createBookingWithData, initialState);
   return (
     <div className="scale-[1.01]">
       <div className="bg-primary-800 text-primary-300 px-16 py-2 flex justify-between items-center">
@@ -26,7 +47,7 @@ function ReservationForm({ cabin, user }: { cabin: Cabin; user: User }) {
         </div>
       </div>
 
-      <form className="bg-primary-900 py-10 px-16 text-lg flex gap-5 flex-col">
+      <form action={formAction} className="bg-primary-900 py-10 px-16 text-lg flex gap-5 flex-col">
         <div className="space-y-2">
           <label htmlFor="numGuests">How many guests?</label>
           <select
@@ -51,17 +72,26 @@ function ReservationForm({ cabin, user }: { cabin: Cabin; user: User }) {
           <textarea
             name="observations"
             id="observations"
+            required
             className="px-5 py-3 bg-primary-200 text-primary-800 w-full shadow-sm rounded-sm"
             placeholder="Any pets, allergies, special requirements, etc.?"
           />
         </div>
 
-        <div className="flex justify-end items-center gap-6">
+        <div className="flex justify-end items-center gap-6 relative">
           <p className="text-primary-300 text-base">Start by selecting dates</p>
 
-          <button className="bg-accent-500 px-8 py-4 text-primary-800 font-semibold hover:bg-accent-600 transition-all disabled:cursor-not-allowed disabled:bg-gray-500 disabled:text-gray-300">
-            Reserve now
+          <button
+            disabled={!startDate || !endDate}
+            className="bg-accent-500 px-8 py-4 text-primary-800 font-semibold hover:bg-accent-600 transition-all disabled:cursor-not-allowed disabled:bg-gray-500 disabled:text-gray-300"
+          >
+            {isPending ? "Reserving..." : "Reserve now"}
           </button>
+          {error && !success && (
+            <span className="bg-accent-500 text-primary-800 text-base absolute -bottom-8 w-full text-center">
+              {error}
+            </span>
+          )}
         </div>
       </form>
     </div>

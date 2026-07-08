@@ -7,7 +7,7 @@ export interface Booking {
   numNights: number;
   totalPrice: number;
   numGuests: number;
-  status: 1 | 0;
+  status: string;
   created_at: string;
   cabins: { name: string; image: string } | { name: string; image: string }[];
   observations?: string | null;

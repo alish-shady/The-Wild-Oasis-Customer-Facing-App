@@ -9,7 +9,6 @@ export default async function Page() {
   const session = await auth();
   if (!session?.user) throw new Error("Unauthorized");
   const bookings = await getBookings(Number(session.user?.guestId));
-  console.log(bookings);
   return (
     <div>
       <h2 className="font-semibold text-2xl text-accent-400 mb-7">Your reservations</h2>

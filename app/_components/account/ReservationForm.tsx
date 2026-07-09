@@ -1,13 +1,14 @@
 "use client";
 
-import { useAppSelector } from "@/app/_lib/hooks";
+import { useAppDispatch, useAppSelector } from "@/app/_lib/hooks";
 import { Cabin } from "../../../types/cabin";
-import { selectReservationDateRange } from "@/app/_lib/slices/reservationSlice";
+import { clearRange, selectReservationDateRange } from "@/app/_lib/slices/reservationSlice";
 import { User } from "next-auth";
 import Image from "next/image";
 import { differenceInDays } from "date-fns";
 import { createReservation } from "@/app/_lib/actions";
-import { useActionState } from "react";
+import { useActionState, useEffect } from "react";
+import FormButton from "../common/FormButton";
 
 const initialState = {
   error: "",
@@ -16,6 +17,7 @@ const initialState = {
 function ReservationForm({ cabin, user }: { cabin: Cabin; user: User }) {
   const { maxCapacity, regularPrice, discount, id } = cabin;
   const range = useAppSelector(selectReservationDateRange);
+  const dispatch = useAppDispatch();
   const startDate = range?.from?.toISOString();
   const endDate = range?.to?.toISOString();
   const numNights = startDate && endDate ? differenceInDays(endDate, startDate) : 0;
@@ -30,6 +32,9 @@ function ReservationForm({ cabin, user }: { cabin: Cabin; user: User }) {
 
   const createBookingWithData = createReservation.bind(null, bookingData);
   const [{ error, success }, formAction, isPending] = useActionState(createBookingWithData, initialState);
+  useEffect(() => {
+    if (success) dispatch(clearRange());
+  }, [success, dispatch]);
   return (
     <div className="scale-[1.01]">
       <div className="bg-primary-800 text-primary-300 px-16 py-2 flex justify-between items-center">
@@ -80,13 +85,9 @@ function ReservationForm({ cabin, user }: { cabin: Cabin; user: User }) {
 
         <div className="flex justify-end items-center gap-6 relative">
           <p className="text-primary-300 text-base">Start by selecting dates</p>
-
-          <button
-            disabled={!startDate || !endDate}
-            className="bg-accent-500 px-8 py-4 text-primary-800 font-semibold hover:bg-accent-600 transition-all disabled:cursor-not-allowed disabled:bg-gray-500 disabled:text-gray-300"
-          >
-            {isPending ? "Reserving..." : "Reserve now"}
-          </button>
+          <FormButton pendingLabel="Reserving..." disabled={!startDate || !endDate}>
+            Reserve Now
+          </FormButton>
           {error && !success && (
             <span className="bg-accent-500 text-primary-800 text-base absolute -bottom-8 w-full text-center">
               {error}

@@ -62,11 +62,13 @@ export async function createReservation(
     status: "unconfirmed",
   };
   try {
-    await createBooking(newBooking);
+    const data = await createBooking(newBooking);
+    revalidatePath(`/cabins/${cabinId}`);
+    redirect("/cabins/thankyou");
   } catch (err) {
     return {
       error: err instanceof Error ? err.message : "Something went wrong",
-      success: true,
+      success: false,
     };
   }
   return {

@@ -154,12 +154,10 @@ export async function createGuest(newGuest: NewGuest) {
 
 export async function createBooking(newBooking: Partial<Booking>) {
   const { data, error } = await supabase.from("bookings").insert([newBooking]).select().single();
-
   if (error) {
     console.error(error);
     throw new Error("Booking could not be created");
   }
-
   return data;
 }
 

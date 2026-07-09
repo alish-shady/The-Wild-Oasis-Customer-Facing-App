@@ -60,12 +60,13 @@ https://your-live-app-url.com
 
 ## Screenshots
 
-```
-![Home](public/screenshots/home.png)
-![Cabins](public/screenshots/cabins.png)
-![Cabin Details](public/screenshots/cabin.png)
-![Account](public/screenshots/account.png)
-```
+<p align="center"> <img src="./public/screenshots/home.png" alt="Home Page" width="800" /> </p>
+
+<p align="center"> <img src="./public/screenshots/cabins.png" alt="Cabins Page" width="800" /> </p>
+
+<p align="center"> <img src="./public/screenshots/cabin.png" alt="Cabin Details Page" width="800" /> </p>
+
+<p align="center"> <img src="./public/screenshots/account.png" alt="Account Page" width="800" /> </p>
 
 ---
 

@@ -35,7 +35,7 @@ export async function updateProfile(formData: FormData) {
 
 export async function createReservation(
   bookingData: Partial<Booking>,
-  prevState: { error: string; success: boolean },
+  prevState: { error: string },
   formData: FormData,
 ) {
   const guestId = await getGuestId();
@@ -63,18 +63,13 @@ export async function createReservation(
   };
   try {
     const data = await createBooking(newBooking);
-    revalidatePath(`/cabins/${cabinId}`);
-    redirect("/cabins/thankyou");
   } catch (err) {
     return {
       error: err instanceof Error ? err.message : "Something went wrong",
-      success: false,
     };
   }
-  return {
-    error: "",
-    success: true,
-  };
+  revalidatePath(`/cabins/${cabinId}`);
+  redirect("/cabins/thankyou");
 }
 
 export async function deleteReservation(bookingId: BookingId) {

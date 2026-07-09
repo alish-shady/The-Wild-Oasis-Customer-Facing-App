@@ -2,12 +2,12 @@
 
 import { useAppDispatch, useAppSelector } from "@/app/_lib/hooks";
 import { Cabin } from "../../../types/cabin";
-import { clearRange, selectReservationDateRange } from "@/app/_lib/slices/reservationSlice";
+import { selectReservationDateRange } from "@/app/_lib/slices/reservationSlice";
 import { User } from "next-auth";
 import Image from "next/image";
 import { differenceInDays } from "date-fns";
 import { createReservation } from "@/app/_lib/actions";
-import { useActionState, useEffect } from "react";
+import { useActionState } from "react";
 import FormButton from "../common/FormButton";
 
 const initialState = {
@@ -31,10 +31,8 @@ function ReservationForm({ cabin, user }: { cabin: Cabin; user: User }) {
   };
 
   const createBookingWithData = createReservation.bind(null, bookingData);
-  const [{ error, success }, formAction, isPending] = useActionState(createBookingWithData, initialState);
-  useEffect(() => {
-    if (success) dispatch(clearRange());
-  }, [success, dispatch]);
+  const [{ error }, formAction, isPending] = useActionState(createBookingWithData, initialState);
+
   return (
     <div className="scale-[1.01]">
       <div className="bg-primary-800 text-primary-300 px-16 py-2 flex justify-between items-center">
@@ -88,7 +86,7 @@ function ReservationForm({ cabin, user }: { cabin: Cabin; user: User }) {
           <FormButton pendingLabel="Reserving..." disabled={!startDate || !endDate}>
             Reserve Now
           </FormButton>
-          {error && !success && (
+          {error && (
             <span className="bg-accent-500 text-primary-800 text-base absolute -bottom-8 w-full text-center">
               {error}
             </span>

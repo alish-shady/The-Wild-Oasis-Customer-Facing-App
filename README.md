@@ -52,8 +52,6 @@ application settings.
 
 ## Live Demo
 
-Add your deployed link here:
-
 ```
 https://your-live-app-url.com
 ```
@@ -62,13 +60,11 @@ https://your-live-app-url.com
 
 ## Screenshots
 
-Add screenshots of your app here:
-
 ```
-/public/screenshots/home.png
-/public/screenshots/cabin.png
-/public/screenshots/account.png
-/public/screenshots/cabins.png
+![Home](public/screenshots/home.png)
+![Cabins](public/screenshots/cabins.png)
+![Cabin Details](public/screenshots/cabin.png)
+![Account](public/screenshots/account.png)
 ```
 
 ---
@@ -285,12 +281,8 @@ Before deploying, ensure all production environment variables are configured.
 
 ## Author
 
-**Ali Shapoori** Frontend Developer (React / Next.js)
+**Ali Shapoori** Web Developer
 
 GitHub: https://github.com/alish-shady
 
 ---
-
-## License
-
-No license has been specified for this repository yet.

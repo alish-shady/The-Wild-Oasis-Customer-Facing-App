@@ -53,7 +53,7 @@ application settings.
 ## Live Demo
 
 ```
-https://your-live-app-url.com
+https://the-wild-oasis-website-orcin.vercel.app/
 ```
 
 ---
